@@ -1,5 +1,7 @@
 # Credentials — never commit these
 .env
+.env.sandbox
+.env.production
 tokens/
 
 # Python

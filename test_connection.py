@@ -1,14 +1,16 @@
 """
-test_connection.py — Verify QuickBooks sandbox connectivity
+test_connection.py — Verify QuickBooks Online connectivity
 
-Run this first to confirm auth works and the API is reachable.
-On success: prints your sandbox company name and first 5 customers.
+Run this to confirm auth works and the API is reachable.
+On success: prints your company name and first 5 customers.
 """
+import os
 from auth_qbo import get_tokens, api_get
 
 
 def main():
-    print("=== QuickBooks Sandbox Connection Test ===\n")
+    env = os.getenv("QBO_ENVIRONMENT", "sandbox").upper()
+    print(f"=== QuickBooks Connection Test ({env}) ===\n")
 
     print("Step 1: Authenticating...")
     tokens = get_tokens()
@@ -23,11 +25,11 @@ def main():
     print("Step 3: Fetching customers...")
     data = api_get("query?query=SELECT * FROM Customer MAXRESULTS 5&minorversion=65", tokens)
     customers = data.get("QueryResponse", {}).get("Customer", [])
-    print(f"  First {len(customers)} sandbox customers:")
+    print(f"  First {len(customers)} customers:")
     for c in customers:
         print(f"    - {c.get('DisplayName', 'unnamed')}")
 
-    print("\n=== All checks passed. QB sandbox is connected. ===")
+    print(f"\n=== All checks passed. QB {env} is connected. ===")
 
 
 if __name__ == "__main__":
