@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBooks Authorization — Curtis Painting</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 640px; margin: 80px auto; padding: 0 24px; color: #222; line-height: 1.7; }
+    h1 { font-size: 1.3rem; }
+    .box { background: #f4f4f4; border: 1px solid #ddd; border-radius: 6px; padding: 16px 20px; margin: 20px 0; font-family: monospace; font-size: 0.95rem; word-break: break-all; }
+    .label { font-size: 0.85rem; color: #666; margin-bottom: 4px; }
+    .error { color: #b91c1c; }
+    button { margin-top: 6px; padding: 4px 12px; font-size: 0.85rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>QuickBooks Authorization</h1>
+  <p>Copy the values below and paste them into your terminal when prompted.</p>
+
+  <div id="output"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const realmId = params.get('realmId');
+    const error = params.get('error');
+    const out = document.getElementById('output');
+
+    if (error) {
+      out.innerHTML = `<p class="error"><strong>Authorization failed:</strong> ${error}</p>`;
+    } else if (code && realmId) {
+      out.innerHTML = `
+        <div class="label">Authorization Code</div>
+        <div class="box" id="code">${code}</div>
+        <button onclick="navigator.clipboard.writeText('${code}')">Copy</button>
+
+        <div class="label" style="margin-top:20px">Realm ID (Company ID)</div>
+        <div class="box" id="realm">${realmId}</div>
+        <button onclick="navigator.clipboard.writeText('${realmId}')">Copy</button>
+
+        <p style="margin-top:24px;color:#555;font-size:0.9rem">You can close this tab when done.</p>
+      `;
+    } else {
+      out.innerHTML = `<p class="error">No authorization data found in URL. Make sure you arrived here from QuickBooks.</p>`;
+    }
+  </script>
+</body>
+</html>

@@ -92,6 +92,18 @@ def _run_oauth_flow() -> dict:
     }
     url = f"{AUTH_URL}?{urlencode(params)}"
 
+    print(f"\nOpening browser for QuickBooks authorization...")
+    print(f"If the browser doesn't open, visit this URL manually:\n{url}\n")
+    webbrowser.open(url)
+
+    if _environment() == "production":
+        return _run_manual_callback()
+    else:
+        return _run_local_callback()
+
+
+def _run_local_callback() -> dict:
+    """Catch OAuth callback on localhost:8080 (sandbox only)."""
     auth_code = None
     realm_id = None
 
@@ -109,11 +121,22 @@ def _run_oauth_flow() -> dict:
         def log_message(self, *args):
             pass
 
-    print(f"\nOpening browser for QuickBooks authorization...")
-    print(f"If the browser doesn't open, visit this URL manually:\n{url}\n")
-    webbrowser.open(url)
-
     HTTPServer(("localhost", 8080), CallbackHandler).serve_forever()
+
+    tokens = _exchange_code(auth_code, realm_id)
+    _save_tokens(tokens["access_token"], tokens["refresh_token"], realm_id)
+    print(f"Tokens saved. Realm ID: {realm_id}")
+    return {**tokens, "realm_id": realm_id}
+
+
+def _run_manual_callback() -> dict:
+    """Production auth — user copies code and realmId from GitHub Pages callback."""
+    print("After authorizing in the browser, you will be redirected to:")
+    print("  https://ncurtis91.github.io/curtis-qb-app/callback")
+    print("\nCopy the two values shown on that page and paste them below.\n")
+
+    auth_code = input("Authorization Code: ").strip()
+    realm_id  = input("Realm ID:           ").strip()
 
     tokens = _exchange_code(auth_code, realm_id)
     _save_tokens(tokens["access_token"], tokens["refresh_token"], realm_id)
