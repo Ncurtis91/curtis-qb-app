@@ -1,0 +1,52 @@
+{
+  "labor_rate": 90.00,
+
+  "sqft_calculation": {
+    "method": "perimeter_x_height",
+    "default_wall_height": 9.5,
+    "note": "Use actual wall height if known; 9.5 is midpoint default for 9-10ft walls"
+  },
+
+  "exterior_surfaces": {
+    "stucco": {
+      "price_per_sqft": 1.65,
+      "unit": "sqft",
+      "method": "spray and backroll",
+      "coats": "1 — do NOT assume 2 coats. Standard application is spray + backroll once. A future 'color_change' item will handle second-coat pricing separately.",
+      "customer_description": "Exterior painting - stucco"
+    },
+    "soffit_fascia": {
+      "price_per_linear_ft": 7.00,
+      "price_per_linear_ft_with_gutters": 9.00,
+      "unit": "linear_ft"
+    }
+  },
+
+  "flat_rate_items": {
+    "pressure_wash": {
+      "price": 400.00,
+      "note": "Required on all exterior repaints"
+    },
+    "carriage_light": {
+      "price_each": 100.00,
+      "includes": "Disassemble, clean, paint, reinstall"
+    },
+    "front_door": {
+      "price": 120.00
+    },
+    "side_back_door": {
+      "price": 70.00
+    },
+    "garage_door_2car": {
+      "price": 250.00,
+      "includes": "Door and casing"
+    },
+    "garage_door_1car": {
+      "price": 150.00,
+      "includes": "Door and casing"
+    },
+    "shutter": {
+      "price_each": 75.00
+    }
+  }
+}
